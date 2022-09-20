@@ -182,6 +182,7 @@ int PlayMode::collision_box(){
 		float y_s = (box_vector[i]->position.y - player->position.y) * (box_vector[i]->position.y - player->position.y);
 		float z_s = (box_vector[i]->position.z - player->position.z) * (box_vector[i]->position.z - player->position.z);
 		float dist = sqrt(x_s + y_s + z_s);
+		//std::cout << dist << std::endl;
 		if(dist <= 1.3f){
 			return i; 
 		}
@@ -298,12 +299,20 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 	return false;
 }
 
+void PlayMode::hide_star(){
+	int box_index = floor(rand()%11);
+	star->position = glm::vec3(box_vector[box_index]->position.x, box_vector[box_index]->position.y, -2.2f);
+	star_index = box_index;
+	std::cout << star_index << std::endl;
+}
+
 void PlayMode::update(float elapsed) {
 	int cur_index = collision_box();
 	if(cur_index != -1){
 		if(cur_index == star_index){
 			star->position.z = 3.3f;
 			std::cout << "get the star" << std::endl;
+			hide_star();
 		}
 	}
 
