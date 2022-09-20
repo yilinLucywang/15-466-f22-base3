@@ -50,6 +50,7 @@ struct PlayMode : Mode {
 	void gen_hint_sound();
 	void hide_star();
 	int star_index = 1;
+	int score = 0;
 	//camera:
 	Scene::Camera *camera = nullptr;
 

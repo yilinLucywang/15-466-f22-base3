@@ -301,8 +301,9 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 
 void PlayMode::hide_star(){
 	int box_index = floor(rand()%11);
-	star->position = glm::vec3(box_vector[box_index]->position.x, box_vector[box_index]->position.y, -2.2f);
+	//star->position = glm::vec3(box_vector[box_index]->position.x, box_vector[box_index]->position.y, -2.2f);
 	star_index = box_index;
+	score = score + 1;
 	std::cout << star_index << std::endl;
 }
 
@@ -310,6 +311,7 @@ void PlayMode::update(float elapsed) {
 	int cur_index = collision_box();
 	if(cur_index != -1){
 		if(cur_index == star_index){
+			star->position = glm::vec3(box_vector[star_index]->position.x, box_vector[star_index]->position.y, box_vector[star_index]->position.y);
 			star->position.z = 3.3f;
 			std::cout << "get the star" << std::endl;
 			hide_star();
@@ -414,14 +416,15 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 		));
 
 		constexpr float H = 0.09f;
-		lines.draw_text("Mouse motion rotates camera; WASD moves; escape ungrabs mouse",
+		constexpr float H1 = 0.18f;
+		lines.draw_text("Arrow keys move the player; space key gives 3d bell hint sound",
 			glm::vec3(-aspect + 0.1f * H, -1.0 + 0.1f * H, 0.0),
 			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
 			glm::u8vec4(0x00, 0x00, 0x00, 0x00));
 		float ofs = 2.0f / drawable_size.y;
-		lines.draw_text("Mouse motion rotates camera; WASD moves; escape ungrabs mouse",
-			glm::vec3(-aspect + 0.1f * H + ofs, -1.0 + + 0.1f * H + ofs, 0.0),
-			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H, 0.0f),
+		lines.draw_text("SCORE:" + std::to_string(score),
+			glm::vec3(-aspect + 0.1f * H1 + ofs, -1.0 + + 0.1f * H1 + ofs, 0.0),
+			glm::vec3(H, 0.0f, 0.0f), glm::vec3(0.0f, H1, 0.0f),
 			glm::u8vec4(0xff, 0xff, 0xff, 0x00));
 	}
 	GL_ERRORS();
