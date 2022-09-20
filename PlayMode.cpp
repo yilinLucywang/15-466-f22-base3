@@ -302,18 +302,18 @@ void PlayMode::update(float elapsed) {
 	int cur_index = collision_box();
 	if(cur_index != -1){
 		if(cur_index == star_index){
+			star->position.z = 3.3f;
 			std::cout << "get the star" << std::endl;
 		}
 	}
 
-	//TODO: if space pressed
+	//if space pressed, give the sound hint
 	if(space.pressed){
 		gen_hint_sound();
 	}
-	
+
 	//move camera:
 	{
-
 		//combine inputs into a move:
 		constexpr float PlayerSpeed = 30.0f;
 		glm::vec2 move = glm::vec2(0.0f);
@@ -340,9 +340,6 @@ void PlayMode::update(float elapsed) {
 		Sound::listener.set_position_right(frame_at, frame_right, 1.0f / 60.0f);
 	}
 
-
-
-	//move the water bucket
 	{
 		constexpr float PlayerSpeed = 30.0f;
 		glm::vec2 w_move = glm::vec2(0.0f);
