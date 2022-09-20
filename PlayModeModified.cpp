@@ -14,13 +14,13 @@
 
 GLuint hexapod_meshes_for_lit_color_texture_program = 0;
 Load< MeshBuffer > hexapod_meshes(LoadTagDefault, []() -> MeshBuffer const * {
-	MeshBuffer const *ret = new MeshBuffer(data_path("game3Sound.pnct"));
+	MeshBuffer const *ret = new MeshBuffer(data_path("hexapod.pnct"));
 	hexapod_meshes_for_lit_color_texture_program = ret->make_vao_for_program(lit_color_texture_program->program);
 	return ret;
 });
 
 Load< Scene > hexapod_scene(LoadTagDefault, []() -> Scene const * {
-	return new Scene(data_path("game3Sound.scene"), [&](Scene &scene, Scene::Transform *transform, std::string const &mesh_name){
+	return new Scene(data_path("hexapod.scene"), [&](Scene &scene, Scene::Transform *transform, std::string const &mesh_name){
 		Mesh const &mesh = hexapod_meshes->lookup(mesh_name);
 
 		scene.drawables.emplace_back(transform);
@@ -36,9 +36,14 @@ Load< Scene > hexapod_scene(LoadTagDefault, []() -> Scene const * {
 	});
 });
 
-Load< Sound::Sample > dusty_floor_sample(LoadTagDefault, []() -> Sound::Sample const * {
-	return new Sound::Sample(data_path("do.wav"));
-});
+//TODO: check here
+// Load< Sound::Sample > dusty_floor_sample(LoadTagDefault, []() -> Sound::Sample const * {
+// 	return new Sound::Sample(data_path("dusty-floor.opus"));
+// });
+
+// Load< Sound::Sample > do_sample(LoadTagDefault, []() -> Sound::Sample const * {
+// 	return new Sound::Sample(data_path("do.wav"));
+// });
 
 // Load< Sound::Sample > re_sample(LoadTagDefault, []() -> Sound::Sample const * {
 // 	return new Sound::Sample(data_path("re.wav"));
@@ -65,7 +70,7 @@ Load< Sound::Sample > dusty_floor_sample(LoadTagDefault, []() -> Sound::Sample c
 // });
 
 PlayMode::PlayMode() : scene(*hexapod_scene) {
-	// //get pointers to leg for convenience:
+	//get pointers to leg for convenience:
 	// for (auto &transform : scene.transforms) {
 	// 	if (transform.name == "Hip.FL") hip = &transform;
 	// 	else if (transform.name == "UpperLeg.FL") upper_leg = &transform;
@@ -85,7 +90,20 @@ PlayMode::PlayMode() : scene(*hexapod_scene) {
 
 	//start music loop playing:
 	// (note: position will be over-ridden in update())
-	leg_tip_loop = Sound::loop_3D(*dusty_floor_sample, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
+	// leg_tip_loop = Sound::loop_3D(*dusty_floor_sample, 1.0f, get_leg_tip_position(), 10.0f);
+
+
+
+	//TODO: add the sound here
+	//do_loop = Sound::loop_3D(*do_sample, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
+	// Sound::loop_3D(*re_sample, 1.0f, get_leg_tip_position(), 10.0f);
+	// Sound::loop_3D(*mi_sample, 1.0f, get_leg_tip_position(), 10.0f);
+	// Sound::loop_3D(*fa_sample, 1.0f, get_leg_tip_position(), 10.0f);
+	// Sound::loop_3D(*so_sample, 1.0f, get_leg_tip_position(), 10.0f);
+	// Sound::loop_3D(*la_sample, 1.0f, get_leg_tip_position(), 10.0f);
+	// Sound::loop_3D(*xi_sample, 1.0f, get_leg_tip_position(), 10.0f);
+
+
 }
 
 PlayMode::~PlayMode() {
@@ -171,7 +189,7 @@ void PlayMode::update(float elapsed) {
 	// );
 
 	//move sound to follow leg tip position:
-	leg_tip_loop->set_position(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f / 60.0f);
+	//do_loop->set_position(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f / 60.0f);
 
 	//move camera:
 	{
@@ -257,4 +275,4 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 // glm::vec3 PlayMode::get_leg_tip_position() {
 // 	//the vertex position here was read from the model in blender:
 // 	return lower_leg->make_local_to_world() * glm::vec4(-1.26137f, -11.861f, 0.0f, 1.0f);
-// 	}
+// }
