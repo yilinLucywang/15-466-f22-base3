@@ -53,45 +53,45 @@ PlayMode::PlayMode() : scene(*hexapod_scene) {
 			player = &transform;
 		}
 
-		if(transform.name == "cube0"){
+		if(transform.name == "Cube0"){
 			box0 = &transform;
 		}
-		if(transform.name == "cube1"){
+		if(transform.name == "Cube1"){
 			box1 = &transform;
 		}
 
-		if(transform.name == "cube2"){
+		if(transform.name == "Cube2"){
 			box2 = &transform;
 		}
-		if(transform.name == "cube3"){
+		if(transform.name == "Cube3"){
 			box3 = &transform;
 		}
 
-		if(transform.name == "cube4"){
+		if(transform.name == "Cube4"){
 			box4 = &transform;
 		}
-		if(transform.name == "cube5"){
+		if(transform.name == "Cube5"){
 			box5 = &transform;
 		}
 
-		if(transform.name == "cube6"){
+		if(transform.name == "Cube6"){
 			box6 = &transform;
 		}
-		if(transform.name == "cube7"){
+		if(transform.name == "Cube7"){
 			box7 = &transform;
 		}
 
-		if(transform.name == "cube8"){
+		if(transform.name == "Cube8"){
 			box8 = &transform;
 		}
-		if(transform.name == "cube9"){
+		if(transform.name == "Cube9"){
 			box9 = &transform;
 		}
 
-		if(transform.name == "cube10"){
+		if(transform.name == "Cube10"){
 			box10 = &transform;
 		}
-		if(transform.name == "cube11"){
+		if(transform.name == "Cube11"){
 			box11 = &transform;
 		}
 
@@ -144,6 +144,43 @@ PlayMode::PlayMode() : scene(*hexapod_scene) {
 }
 
 PlayMode::~PlayMode() {
+}
+
+
+void PlayMode::gen_hint_sound(){
+	float x_diff = (star->position.x - player->position.x); 
+	float y_diff = (star->position.y - player->position.y);
+	bool is_left = true; 
+	bool is_front = true;
+	if(x_diff < 0){
+		is_left = false;
+	}
+	if(y_diff < 0){
+		is_front = true; 
+	}
+
+	if(is_left && is_front){
+		std::cout << "hello, check position" << std::endl;
+	}
+	// std::cout << "hello, check position" << std::endl;
+	// std::cout << is_left << std::endl;
+	// std::cout << is_front << std::endl;
+
+}
+
+int PlayMode::collision_box(){
+	for(int i = 0; i < box_vector.size(); i++){
+		float x_s = (box_vector[i]->position.x - player->position.x) * (box_vector[i]->position.x - player->position.x);
+		float y_s = (box_vector[i]->position.y - player->position.y) * (box_vector[i]->position.y - player->position.y);
+		float z_s = (box_vector[i]->position.z - player->position.z) * (box_vector[i]->position.z - player->position.z);
+		float dist = sqrt(x_s + y_s + z_s);
+		if(dist <= 1.3f){
+			std::cout << i << std::endl;
+			return i; 
+		}
+	}
+	std::cout << "-1" << std::endl;
+	return -1; 
 }
 
 bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size) {
@@ -248,6 +285,16 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 }
 
 void PlayMode::update(float elapsed) {
+
+	gen_hint_sound(); 
+	// std::cout << "hello, 111" << std::endl;
+	// std::cout << box_vector.size() << std::endl;
+	// std::cout << box_vector[0]->position.x << std::endl;
+	// for(int i = 0; i < box_vector.size(); i++){
+	// 	std::cout << box_vector[i]->position.x << std::endl;
+	// }
+	// std::cout << "hello, 222" << std::endl;
+	collision_box();
 	//move sound to follow leg tip position:
 	hint_one_shot->set_position(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f / 60.0f);
 

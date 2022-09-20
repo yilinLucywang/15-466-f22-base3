@@ -46,6 +46,8 @@ struct PlayMode : Mode {
 	Scene::Transform *box11 = nullptr;
 	Scene::Transform *star = nullptr;
 	std::vector<Scene::Transform*> box_vector = {};
+	int collision_box();
+	void gen_hint_sound();
 	//camera:
 	Scene::Camera *camera = nullptr;
 
