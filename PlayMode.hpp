@@ -23,7 +23,7 @@ struct PlayMode : Mode {
 	struct Button {
 		uint8_t downs = 0;
 		uint8_t pressed = 0;
-	} left, right, down, up, w_left, w_right, w_down, w_up;
+	} left, right, down, up, w_left, w_right, w_down, w_up, space;
 
 	//local copy of the game scene (so code can change it during gameplay):
 	Scene scene;
@@ -48,6 +48,7 @@ struct PlayMode : Mode {
 	std::vector<Scene::Transform*> box_vector = {};
 	int collision_box();
 	void gen_hint_sound();
+	int star_index = 0;
 	//camera:
 	Scene::Camera *camera = nullptr;
 

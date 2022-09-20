@@ -117,7 +117,7 @@ PlayMode::PlayMode() : scene(*hexapod_scene) {
 
 	//start music loop playing:
 	// (note: position will be over-ridden in update())
-	hint_one_shot = Sound::play(*hint_sample, 1.0f, 0.0f);
+	hint_one_shot = Sound::play_3D(*hint_sample, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
 	leg_tip_loop = Sound::loop_3D(*background_sample, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
 	box_vector.push_back(box0);
 	box_vector.push_back(box1);
@@ -158,14 +158,22 @@ void PlayMode::gen_hint_sound(){
 	if(y_diff < 0){
 		is_front = true; 
 	}
-
-	if(is_left && is_front){
-		std::cout << "hello, check position" << std::endl;
+	//Sound::play_3D(Sample const &sample, float play_volume, glm::vec3 const &position, float half_volume_radius);
+	float x_pos = 0.0f; 
+	float y_pos = 0.0f; 
+	if(is_left){
+		x_pos = 13.0f;
 	}
-	// std::cout << "hello, check position" << std::endl;
-	// std::cout << is_left << std::endl;
-	// std::cout << is_front << std::endl;
-
+	else{
+		x_pos = -13.0f;
+	}
+	if(is_front){
+		y_pos = -62.0f;
+	}
+	else{
+		y_pos = -48.0f;
+	}
+	hint_one_shot = Sound::play_3D(*hint_sample, 1.0f, glm::vec3(x_pos, y_pos, 0.0f), 14.0f);
 }
 
 int PlayMode::collision_box(){
@@ -175,11 +183,9 @@ int PlayMode::collision_box(){
 		float z_s = (box_vector[i]->position.z - player->position.z) * (box_vector[i]->position.z - player->position.z);
 		float dist = sqrt(x_s + y_s + z_s);
 		if(dist <= 1.3f){
-			std::cout << i << std::endl;
 			return i; 
 		}
 	}
-	std::cout << "-1" << std::endl;
 	return -1; 
 }
 
@@ -226,6 +232,10 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 			w_down.pressed = true;
 			return true;
 		}
+		else if(evt.key.keysym.sym == SDLK_SPACE) {
+			space.pressed = true; 
+			return true;
+		}
 		//TODO: key code end
 
 
@@ -259,6 +269,10 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 			w_down.pressed = false;
 			return true;
 		}
+		else if(evt.key.keysym.sym == SDLK_SPACE) {
+			space.pressed = false;
+			return true; 
+		}
 		//TODO: key code end
 
 	} else if (evt.type == SDL_MOUSEBUTTONDOWN) {
@@ -285,19 +299,18 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 }
 
 void PlayMode::update(float elapsed) {
+	int cur_index = collision_box();
+	if(cur_index != -1){
+		if(cur_index == star_index){
+			std::cout << "get the star" << std::endl;
+		}
+	}
 
-	gen_hint_sound(); 
-	// std::cout << "hello, 111" << std::endl;
-	// std::cout << box_vector.size() << std::endl;
-	// std::cout << box_vector[0]->position.x << std::endl;
-	// for(int i = 0; i < box_vector.size(); i++){
-	// 	std::cout << box_vector[i]->position.x << std::endl;
-	// }
-	// std::cout << "hello, 222" << std::endl;
-	collision_box();
-	//move sound to follow leg tip position:
-	hint_one_shot->set_position(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f / 60.0f);
-
+	//TODO: if space pressed
+	if(space.pressed){
+		gen_hint_sound();
+	}
+	
 	//move camera:
 	{
 
