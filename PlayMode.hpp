@@ -23,25 +23,29 @@ struct PlayMode : Mode {
 	struct Button {
 		uint8_t downs = 0;
 		uint8_t pressed = 0;
-	} left, right, down, up;
+	} left, right, down, up, w_left, w_right, w_down, w_up;
 
 	//local copy of the game scene (so code can change it during gameplay):
 	Scene scene;
 
-	//hexapod leg to wobble:
-	Scene::Transform *hip = nullptr;
-	Scene::Transform *upper_leg = nullptr;
-	Scene::Transform *lower_leg = nullptr;
-	glm::quat hip_base_rotation;
-	glm::quat upper_leg_base_rotation;
-	glm::quat lower_leg_base_rotation;
-	float wobble = 0.0f;
-
-	glm::vec3 get_leg_tip_position();
-
 	//music coming from the tip of the leg (as a demonstration):
+	std::shared_ptr< Sound::PlayingSample > hint_one_shot;
 	std::shared_ptr< Sound::PlayingSample > leg_tip_loop;
-	
+	Scene::Transform *player = nullptr;
+	Scene::Transform *box0 = nullptr;
+	Scene::Transform *box1 = nullptr;
+	Scene::Transform *box2 = nullptr;
+	Scene::Transform *box3 = nullptr;
+	Scene::Transform *box4 = nullptr;
+	Scene::Transform *box5 = nullptr;
+	Scene::Transform *box6 = nullptr;
+	Scene::Transform *box7 = nullptr;
+	Scene::Transform *box8 = nullptr;
+	Scene::Transform *box9 = nullptr;
+	Scene::Transform *box10 = nullptr;
+	Scene::Transform *box11 = nullptr;
+	Scene::Transform *star = nullptr;
+	std::vector<Scene::Transform*> box_vector = {};
 	//camera:
 	Scene::Camera *camera = nullptr;
 

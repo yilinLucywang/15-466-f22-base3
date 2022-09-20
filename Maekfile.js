@@ -95,12 +95,12 @@ if (maek.OS === "windows") {
 // from: file to copy from
 // to: file to copy to
 let copies = [
-	maek.COPY(`${NEST_LIBS}/SDL2/dist/README-SDL.txt`, `dist/README-SDL.txt`),
-	maek.COPY(`${NEST_LIBS}/libpng/dist/README-libpng.txt`, `dist/README-libpng.txt`),
-	maek.COPY(`${NEST_LIBS}/glm/dist/README-glm.txt`, `dist/README-glm.txt`),
-	maek.COPY(`${NEST_LIBS}/libopus/dist/README-libopus.txt`, `dist/README-libopus.txt`),
-	maek.COPY(`${NEST_LIBS}/opusfile/dist/README-opusfile.txt`, `dist/README-opusfile.txt`),
-	maek.COPY(`${NEST_LIBS}/libogg/dist/README-libogg.txt`, `dist/README-libogg.txt`)
+	// maek.COPY(`${NEST_LIBS}/SDL2/dist/README-SDL.txt`, `dist/README-SDL.txt`),
+	// maek.COPY(`${NEST_LIBS}/libpng/dist/README-libpng.txt`, `dist/README-libpng.txt`),
+	// maek.COPY(`${NEST_LIBS}/glm/dist/README-glm.txt`, `dist/README-glm.txt`),
+	// maek.COPY(`${NEST_LIBS}/libopus/dist/README-libopus.txt`, `dist/README-libopus.txt`),
+	// maek.COPY(`${NEST_LIBS}/opusfile/dist/README-opusfile.txt`, `dist/README-opusfile.txt`),
+	// maek.COPY(`${NEST_LIBS}/libogg/dist/README-libogg.txt`, `dist/README-libogg.txt`)
 ];
 if (maek.OS === 'windows') {
 	copies.push( maek.COPY(`${NEST_LIBS}/SDL2/dist/SDL2.dll`, `dist/SDL2.dll`) );
@@ -811,17 +811,24 @@ function init_maek() {
 			return hash;
 		}
 
-		//get all hashes:
-		if (OS === 'windows') {
-			//work in serial since otherwise windows can run out of file descriptors:
-			const hashes = [];
-			for (let file of files) {
-				hashes.push(await hashFile(file));
-			}
-			return hashes;
-		} else {
-			return await Promise.all(files.map(hashFile));
-		}
+		// //get all hashes:
+		// if (OS === 'windows') {
+		// 	//work in serial since otherwise windows can run out of file descriptors:
+		// 	const hashes = [];
+		// 	for (let file of files) {
+		// 		hashes.push(await hashFile(file));
+		// 	}
+		// 	return hashes;
+		// } else {
+		// 	return await Promise.all(files.map(hashFile));
+		// }
+		
+		//work in serial since otherwise windows can run out of file descriptors:
+ 		const hashes = [];
+ 		for (let file of files) {
+ 			hashes.push(await hashFile(file));
+ 		}
+ 		return hashes;
 	}
 
 	//---------------------------------

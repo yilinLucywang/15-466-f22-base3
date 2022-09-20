@@ -11,6 +11,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <random>
+#include <cmath>
 
 GLuint hexapod_meshes_for_lit_color_texture_program = 0;
 Load< MeshBuffer > hexapod_meshes(LoadTagDefault, []() -> MeshBuffer const * {
@@ -36,37 +37,68 @@ Load< Scene > hexapod_scene(LoadTagDefault, []() -> Scene const * {
 	});
 });
 
-Load< Sound::Sample > dusty_floor_sample(LoadTagDefault, []() -> Sound::Sample const * {
-	return new Sound::Sample(data_path("do.wav"));
+Load< Sound::Sample > background_sample(LoadTagDefault, []() -> Sound::Sample const * {
+	return new Sound::Sample(data_path("background.wav"));
 });
 
-// Load< Sound::Sample > re_sample(LoadTagDefault, []() -> Sound::Sample const * {
-// 	return new Sound::Sample(data_path("re.wav"));
-// });
+Load< Sound::Sample > hint_sample(LoadTagDefault, []() -> Sound::Sample const * {
+	return new Sound::Sample(data_path("bell_clue.wav"));
+});
 
-// Load< Sound::Sample > mi_sample(LoadTagDefault, []() -> Sound::Sample const * {
-// 	return new Sound::Sample(data_path("mi.wav"));
-// });
-
-// Load< Sound::Sample > fa_sample(LoadTagDefault, []() -> Sound::Sample const * {
-// 	return new Sound::Sample(data_path("fa.wav"));
-// });
-
-// Load< Sound::Sample > so_sample(LoadTagDefault, []() -> Sound::Sample const * {
-// 	return new Sound::Sample(data_path("so.wav"));
-// });
-
-// Load< Sound::Sample > la_sample(LoadTagDefault, []() -> Sound::Sample const * {
-// 	return new Sound::Sample(data_path("la.wav"));
-// });
-
-// Load< Sound::Sample > xi_sample(LoadTagDefault, []() -> Sound::Sample const * {
-// 	return new Sound::Sample(data_path("xi.wav"));
-// });
 
 PlayMode::PlayMode() : scene(*hexapod_scene) {
-	// //get pointers to leg for convenience:
-	// for (auto &transform : scene.transforms) {
+	//get pointers to leg for convenience:
+	for (auto &transform : scene.transforms) {
+		if(transform.name == "Icosphere"){
+			player = &transform;
+		}
+
+		if(transform.name == "cube0"){
+			box0 = &transform;
+		}
+		if(transform.name == "cube1"){
+			box1 = &transform;
+		}
+
+		if(transform.name == "cube2"){
+			box2 = &transform;
+		}
+		if(transform.name == "cube3"){
+			box3 = &transform;
+		}
+
+		if(transform.name == "cube4"){
+			box4 = &transform;
+		}
+		if(transform.name == "cube5"){
+			box5 = &transform;
+		}
+
+		if(transform.name == "cube6"){
+			box6 = &transform;
+		}
+		if(transform.name == "cube7"){
+			box7 = &transform;
+		}
+
+		if(transform.name == "cube8"){
+			box8 = &transform;
+		}
+		if(transform.name == "cube9"){
+			box9 = &transform;
+		}
+
+		if(transform.name == "cube10"){
+			box10 = &transform;
+		}
+		if(transform.name == "cube11"){
+			box11 = &transform;
+		}
+
+		if(transform.name == "star"){
+			star = &transform;
+		}
+	}
 	// 	if (transform.name == "Hip.FL") hip = &transform;
 	// 	else if (transform.name == "UpperLeg.FL") upper_leg = &transform;
 	// 	else if (transform.name == "LowerLeg.FL") lower_leg = &transform;
@@ -85,7 +117,30 @@ PlayMode::PlayMode() : scene(*hexapod_scene) {
 
 	//start music loop playing:
 	// (note: position will be over-ridden in update())
-	leg_tip_loop = Sound::loop_3D(*dusty_floor_sample, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
+	hint_one_shot = Sound::play(*hint_sample, 1.0f, 0.0f);
+	leg_tip_loop = Sound::loop_3D(*background_sample, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
+	box_vector.push_back(box0);
+	box_vector.push_back(box1);
+	box_vector.push_back(box2);
+	box_vector.push_back(box3);
+	box_vector.push_back(box4);
+	box_vector.push_back(box5);
+	box_vector.push_back(box6);
+	box_vector.push_back(box7);
+	box_vector.push_back(box8);
+	box_vector.push_back(box9);
+	box_vector.push_back(box10);
+	box_vector.push_back(box11);
+
+	//TODO: hide the star
+	// std::mt19937 generator (123);
+	// std::uniform_real_distribution<double> dis(0.0, 1.0);//source: https://stackoverflow.com/questions/22923551/generating-number-0-1-using-mersenne-twister-c
+	// int box_index = floor(dis(generator) * 11.0f);
+	// std::cout << box_index << std::endl;
+	// std::cout << box_vector[box_index] << std::endl;
+	// star->position = box_vector[0]->position; 
+
+
 }
 
 PlayMode::~PlayMode() {
@@ -114,6 +169,30 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 			down.pressed = true;
 			return true;
 		}
+
+
+		//TODO: key code
+		else if (evt.key.keysym.sym == SDLK_LEFT) {
+			w_left.downs += 1;
+			w_left.pressed = true;
+			return true;
+		} else if (evt.key.keysym.sym == SDLK_RIGHT) {
+			w_right.downs += 1;
+			w_right.pressed = true;
+			return true;
+		} else if (evt.key.keysym.sym == SDLK_UP) {
+			w_up.downs += 1;
+			w_up.pressed = true;
+			return true;
+		} else if (evt.key.keysym.sym == SDLK_DOWN) {
+			w_down.downs += 1;
+			w_down.pressed = true;
+			return true;
+		}
+		//TODO: key code end
+
+
+
 	} else if (evt.type == SDL_KEYUP) {
 		if (evt.key.keysym.sym == SDLK_a) {
 			left.pressed = false;
@@ -128,6 +207,23 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 			down.pressed = false;
 			return true;
 		}
+
+		//TODO: key code
+		else if (evt.key.keysym.sym == SDLK_LEFT) {
+			w_left.pressed = false;
+			return true;
+		} else if (evt.key.keysym.sym == SDLK_RIGHT) {
+			w_right.pressed = false;
+			return true;
+		} else if (evt.key.keysym.sym == SDLK_UP) {
+			w_up.pressed = false;
+			return true;
+		} else if (evt.key.keysym.sym == SDLK_DOWN) {
+			w_down.pressed = false;
+			return true;
+		}
+		//TODO: key code end
+
 	} else if (evt.type == SDL_MOUSEBUTTONDOWN) {
 		if (SDL_GetRelativeMouseMode() == SDL_FALSE) {
 			SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -152,26 +248,8 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 }
 
 void PlayMode::update(float elapsed) {
-
-	//slowly rotates through [0,1):
-	// wobble += elapsed / 10.0f;
-	// wobble -= std::floor(wobble);
-
-	// hip->rotation = hip_base_rotation * glm::angleAxis(
-	// 	glm::radians(5.0f * std::sin(wobble * 2.0f * float(M_PI))),
-	// 	glm::vec3(0.0f, 1.0f, 0.0f)
-	// );
-	// upper_leg->rotation = upper_leg_base_rotation * glm::angleAxis(
-	// 	glm::radians(7.0f * std::sin(wobble * 2.0f * 2.0f * float(M_PI))),
-	// 	glm::vec3(0.0f, 0.0f, 1.0f)
-	// );
-	// lower_leg->rotation = lower_leg_base_rotation * glm::angleAxis(
-	// 	glm::radians(10.0f * std::sin(wobble * 3.0f * 2.0f * float(M_PI))),
-	// 	glm::vec3(0.0f, 0.0f, 1.0f)
-	// );
-
 	//move sound to follow leg tip position:
-	leg_tip_loop->set_position(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f / 60.0f);
+	hint_one_shot->set_position(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f / 60.0f);
 
 	//move camera:
 	{
@@ -200,6 +278,35 @@ void PlayMode::update(float elapsed) {
 		glm::vec3 frame_right = frame[0];
 		glm::vec3 frame_at = frame[3];
 		Sound::listener.set_position_right(frame_at, frame_right, 1.0f / 60.0f);
+	}
+
+
+
+	//move the water bucket
+	{
+		constexpr float PlayerSpeed = 30.0f;
+		glm::vec2 w_move = glm::vec2(0.0f);
+		if (w_left.pressed && !w_right.pressed) w_move.x =-1.0f;
+		if (!w_left.pressed && w_right.pressed) w_move.x = 1.0f;
+		if (w_down.pressed && !w_up.pressed) w_move.y =-1.0f;
+		if (!w_down.pressed && w_up.pressed) w_move.y = 1.0f;
+
+		//make it so that moving diagonally doesn't go faster:
+		if (w_move != glm::vec2(0.0f)) w_move = glm::normalize(w_move) * PlayerSpeed * elapsed;
+		// glm::mat4x3 frame = camera->transform->make_local_to_parent();
+		// glm::vec3 frame_right = frame[0];
+		// //glm::vec3 up = frame[1];
+		// glm::vec3 frame_forward = -frame[2];
+
+		// camera->transform->position += move.x * frame_right + move.y * frame_forward;
+		glm::mat4x3 w_frame = player->make_local_to_parent();
+		//glm::vec3 w_frame_right = w_frame[2];
+		glm::vec3 w_frame_up = w_frame[0];
+		glm::vec3 w_frame_forward = w_frame[1];
+		//TODO: water bucket move
+		player->position += w_move.x * w_frame_up;
+		//TODO: issues here
+		player->position += w_move.y * w_frame_forward; 
 	}
 
 	//reset button press counters:
